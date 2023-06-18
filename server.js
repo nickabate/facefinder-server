@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 
@@ -10,7 +11,7 @@ const database = {
       id: "123",
       name: "Nick",
       email: "email",
-      password: "pw",
+
       entries: 0,
       joined: new Date(),
     },
@@ -18,9 +19,16 @@ const database = {
       id: "1213",
       name: "Nick",
       email: "email",
-      password: "pw",
+
       entries: 0,
       joined: new Date(),
+    },
+  ],
+  login: [
+    {
+      id: "123",
+      password: "Nick",
+      email: "email",
     },
   ],
 };
@@ -32,7 +40,11 @@ app.get("/", (req, res) => {
 app.post("/signin", (req, res) => {
   if (
     req.body.email === database.users[0].email &&
-    req.body.password === database.users[0].password
+    // req.body.password === database.users[0].password
+    bcrypt.compareSync(
+      req.body.password,
+      database.users[database.users.length - 1].password
+    )
   ) {
     res.json("success");
   } else {
@@ -46,10 +58,12 @@ app.post("/register", (req, res) => {
     id: "125",
     name: name,
     email: email,
-    password: password,
+    password: bcrypt.hashSync(password),
     entries: 0,
     joined: new Date(),
   });
+  console.log(database.users[database.users.length - 1]);
+
   res.json(database.users[database.users.length - 1]);
 });
 
