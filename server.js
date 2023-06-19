@@ -1,9 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const database = {
   users: [
@@ -11,7 +12,7 @@ const database = {
       id: "123",
       name: "Nick",
       email: "email",
-
+      password: "pw",
       entries: 0,
       joined: new Date(),
     },
@@ -19,7 +20,7 @@ const database = {
       id: "1213",
       name: "Nick",
       email: "email",
-
+      password: "pw",
       entries: 0,
       joined: new Date(),
     },
@@ -40,11 +41,8 @@ app.get("/", (req, res) => {
 app.post("/signin", (req, res) => {
   if (
     req.body.email === database.users[0].email &&
-    // req.body.password === database.users[0].password
-    bcrypt.compareSync(
-      req.body.password,
-      database.users[database.users.length - 1].password
-    )
+    req.body.password === database.users[0].password
+    // bcrypt.compareSync(req.body.password, database.users[0].password)
   ) {
     res.json("success");
   } else {
@@ -96,6 +94,6 @@ app.put("/image", (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(8080, () => {
   console.log(`Server is running...`);
 });
