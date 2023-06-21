@@ -2,6 +2,20 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const app = express();
+const knex = require("knex");
+
+const db = knex({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    port: 3306,
+    user: "postgres",
+    password: "rootroot",
+    database: "facefinder",
+  },
+});
+
+console.log(db.select().from("users"));
 
 app.use(express.json());
 app.use(cors());
@@ -19,8 +33,8 @@ const database = {
     {
       id: "1213",
       name: "Nick",
-      email: "email",
-      password: "pw",
+      email: "email2",
+      password: "pw2",
       entries: 0,
       joined: new Date(),
     },
@@ -61,7 +75,6 @@ app.post("/register", (req, res) => {
     joined: new Date(),
   });
   console.log(database.users[database.users.length - 1]);
-
   res.json(database.users[database.users.length - 1]);
 });
 
@@ -81,6 +94,8 @@ app.get("/profile/:id", (req, res) => {
 
 app.put("/image", (req, res) => {
   const { id } = req.body;
+  console.log(id);
+
   let found = false;
   database.users.forEach((user) => {
     if (user.id === id) {
