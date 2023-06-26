@@ -8,14 +8,12 @@ const db = knex({
   client: "pg",
   connection: {
     host: "127.0.0.1",
-    port: 3306,
+    port: 5432,
     user: "postgres",
     password: "rootroot",
     database: "facefinder",
   },
 });
-
-console.log(db.select().from("users"));
 
 app.use(express.json());
 app.use(cors());
@@ -66,15 +64,22 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
-  database.users.push({
-    id: "125",
-    name: name,
-    email: email,
-    password: bcrypt.hashSync(password),
-    entries: 0,
-    joined: new Date(),
-  });
-  console.log(database.users[database.users.length - 1]);
+  // database.users.push({
+  //   id: "125",
+  //   name: name,
+  //   email: email,
+  //   password: bcrypt.hashSync(password),
+  //   entries: 0,
+  //   joined: new Date(),
+  // });
+  db("users")
+    .insert({
+      email: email,
+      name: name,
+      joined: new Date(),
+    })
+    .then(console.log);
+  // console.log(database.users[database.users.length - 1]);
   res.json(database.users[database.users.length - 1]);
 });
 
