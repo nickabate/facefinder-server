@@ -73,14 +73,18 @@ app.post("/register", (req, res) => {
   //   joined: new Date(),
   // });
   db("users")
+    .returning("*")
     .insert({
       email: email,
       name: name,
       joined: new Date(),
     })
-    .then(console.log);
+    .then((user) => {
+      res.json(user[0]);
+    })
+    .catch((err) => res.status(400).json("Unable to register."));
   // console.log(database.users[database.users.length - 1]);
-  res.json(database.users[database.users.length - 1]);
+  // res.json(database.users[database.users.length - 1]);
 });
 
 app.get("/profile/:id", (req, res) => {
