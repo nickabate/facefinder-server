@@ -1,16 +1,36 @@
 const CLARIFAI_API_KEY = process.env.CLARIFAI_API_KEY;
 
-const handleImage = (req, res, db) => {
-  const { id } = req.body;
-  db("users")
-    .where("id", "=", id)
-    .increment("entries", 1)
-    .returning("entries")
-    .then((entries) => {
-      res.json(entries[0].entries);
-    })
-    .catch((_err) => res.status(400).json("Unable to get info"));
+const handleImage = async (req, res, db) => {
+  const { id, amount } = req.body;
+
+  try {
+    const userEntries = await db("users")
+      .where("id", "=", id)
+      .returning("entries");
+
+    const updatedEntries = Number(amount) + Number(userEntries[0].entries);
+
+    const dbEntries = await db("users")
+      .where("id", "=", id)
+      .update("entries", updatedEntries)
+      .returning("entries");
+
+    res.json(dbEntries[0].entries);
+  } catch (e) {
+    res.status(400).json("Unable to get info");
+  }
 };
+// const handleImage = (req, res, db) => {
+//   const { id } = req.body;
+//   db("users")
+//     .where("id", "=", id)
+//     .increment("entries", 1)
+//     .returning("entries")
+//     .then((entries) => {
+//       res.json(entries[0].entries);
+//     })
+//     .catch((_err) => res.status(400).json("Unable to get info"));
+// };
 
 const handleApiCall = (req, res) => {
   const IMAGE_URL = req.body.input;
