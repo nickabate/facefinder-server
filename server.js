@@ -22,12 +22,12 @@ const db = knex({
   client: "pg",
   connection: {
     connectionString: DATABASE_URL,
-    ssl: true,
-    host: DB_HOST,
-    port: DB_PORT,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
+    ssl: { rejectUnauthorized: false },
+    // host: DB_HOST,
+    // port: DB_PORT,
+    // user: DB_USER,
+    // password: DB_PASSWORD,
+    // database: DB_DATABASE,
   },
 });
 
