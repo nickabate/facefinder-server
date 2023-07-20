@@ -11,6 +11,7 @@ const DB_PORT = process.env.DB_PORT;
 const DB_DATABASE = process.env.DB_DATABASE;
 const DB_USER = process.env.DB_USER;
 const DB_HOST = process.env.DB_HOST;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 const register = require("./controllers/register");
 const signIn = require("./controllers/signin");
@@ -20,6 +21,8 @@ const image = require("./controllers/image");
 const db = knex({
   client: "pg",
   connection: {
+    connectionString: DATABASE_URL,
+    ssl: true,
     host: DB_HOST,
     port: DB_PORT,
     user: DB_USER,
